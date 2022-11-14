@@ -323,6 +323,53 @@ shared {Element+} loop&lt;Element&gt;(
     };
 </textarea></div>
 
+  <h2>eC example</h2>
+
+<div><textarea id="ec-code">
+import "ecere"
+
+class Min3D : Window
+{
+   displayDriver = "OpenGL";
+   caption = "Hello, 3D", borderStyle = sizable;
+   hasMaximize = true, hasMinimize = true, hasClose = true;
+   background = black, clientSize = { 640, 480 };
+
+   Cube cube { };
+   Camera camera { position = { 0, 0, -4 }, zMin = 0.1, fov = 53 };
+
+   bool OnLoadGraphics()
+   {
+      cube.Create(displaySystem);
+      cube.transform.orientation = Euler { 30, 40 };
+      cube.UpdateTransform();
+      return true;
+   }
+
+   void OnUnloadGraphics()
+   {
+      cube.Free(displaySystem);
+   }
+
+   void OnResize(int w, int h)
+   {
+      camera.Setup(w, h, null);
+      camera.Update();
+   }
+
+   void OnRedraw(Surface surface)
+   {
+      surface.Clear(depthBuffer);
+      display.SetLight(0, { diffuse = white, specular = white, orientation = Euler { 50, 30 } });
+      display.SetCamera(surface, camera);
+      display.DrawObject(cube);
+   }
+}
+
+Min3D min3D {};
+</textarea></div>
+
+
     <script>
       var cEditor = CodeMirror.fromTextArea(document.getElementById("c-code"), {
         lineNumbers: true,
@@ -359,6 +406,11 @@ shared {Element+} loop&lt;Element&gt;(
           matchBrackets: true,
           mode: "text/x-ceylon"
       });
+      var eCEditor = CodeMirror.fromTextArea(document.getElementById("ec-code"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-ecsrc"
+      });
       var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
       CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
     </script>
@@ -375,6 +427,8 @@ shared {Element+} loop&lt;Element&gt;(
     <code>text/x-objectivec</code> (Objective-C),
     <code>text/x-scala</code> (Scala), <code>text/x-vertex</code>
     <code>x-shader/x-fragment</code> (shader programs),
-    <code>text/x-squirrel</code> (Squirrel) and
-    <code>text/x-ceylon</code> (Ceylon)</p>
+    <code>text/x-squirrel</code> (Squirrel),
+    <code>text/x-ceylon</code> (Ceylon) and
+    <code>text/x-ecsrc</code> (eC)
+  </p>
 </article>
